@@ -22,7 +22,7 @@ To use this MCP server with Claude for Desktop:
     "mcpServers": {
       "griffin": {
         "command": "npx",
-        "args": ["-y" "@griffinbank/mcp-server"],
+        "args": ["-y", "@griffinbank/mcp-server"],
         "env": {
           "GRIFFIN_API_KEY": "your-griffin-api-key"
         }
