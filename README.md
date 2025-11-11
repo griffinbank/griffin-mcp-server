@@ -39,7 +39,7 @@ Do not attempt to use this MCP server with your live organisation API key. We ha
 
 ## Features
 
-- Open operational accounts
+- Open and close bank accounts
 - Create and submit payments
 - List resources, e.g. payments, bank accounts, legal persons
 - Fetch information about specific resources
@@ -48,6 +48,7 @@ Do not attempt to use this MCP server with your live organisation API key. We ha
 
 - `create-and-submit-payment` - Creates and submits a payment
 - `open-operational-account` - Opens a new operational account
+- `close-bank-account` - Closes a bank account
 - `list-bank-accounts` - Lists all bank accounts
 - `list-legal-persons` - Lists all legal persons
 - `list-payments` - Lists all payments
@@ -60,4 +61,3 @@ Do not attempt to use this MCP server with your live organisation API key. We ha
 
 ## Give us feedback
 Reach out to us at product@griffin.com or join our [Slack community](https://join.slack.com/t/griffin-community/shared_invite/zt-1do6oaad0-HB54Hv9KEfYOLQoUlZ_77A)
-
