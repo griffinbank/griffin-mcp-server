@@ -273,6 +273,7 @@ async function openOperationalAccount(client: GriffinAPIClient, server: McpServe
             data = await client.getBankAccount(accountUrl);
             accountStatus = data["account-status"];
             pollingAttempts++;
+            logger.info(`Polling attempt ${pollingAttempts}: account status is "${accountStatus}"`);
 
             if (accountStatus === "open") {
               break;
@@ -320,6 +321,7 @@ async function closeBankAccount(client: GriffinAPIClient, server: McpServer) {
             data = await client.getBankAccount(accountUrl);
             accountStatus = data["account-status"];
             pollingAttempts++;
+            logger.info(`Polling attempt ${pollingAttempts}: account status is "${accountStatus}"`);
 
             if (accountStatus === "closed") {
               break;
