@@ -273,6 +273,7 @@ async function openOperationalAccount(client: GriffinAPIClient, server: McpServe
             data = await client.getBankAccount(accountUrl);
             accountStatus = data["account-status"];
             pollingAttempts++;
+            logger.info(`Polling attempt ${pollingAttempts}: account status is "${accountStatus}"`);
 
             if (accountStatus === "open") {
               break;
@@ -297,6 +298,54 @@ async function openOperationalAccount(client: GriffinAPIClient, server: McpServe
   );
 }
 
+async function closeBankAccount(client: GriffinAPIClient, server: McpServer) {
+  server.tool(
+    "close-bank-account",
+    "Close a bank account. The account must have a zero balance before it can be closed.",
+    {
+      accountUrl: z.string().describe("The URL of the bank account to close (e.g., '/v0/bank/accounts/ba.xxx')")
+    },
+    async ({ accountUrl }) => {
+      try {
+        let data = await client.closeAccount(accountUrl);
+
+        const startTime = Date.now();
+        const timeoutMs = 10 * 1000;
+        let accountStatus = data["account-status"];
+        let pollingAttempts = 1;
+
+        while (accountStatus === "closing" && (Date.now() - startTime) < timeoutMs) {
+          await new Promise(resolve => setTimeout(resolve, 1000));
+
+          try {
+            data = await client.getBankAccount(accountUrl);
+            accountStatus = data["account-status"];
+            pollingAttempts++;
+            logger.info(`Polling attempt ${pollingAttempts}: account status is "${accountStatus}"`);
+
+            if (accountStatus === "closed") {
+              break;
+            }
+          } catch (pollError) {
+            logger.error("error polling", pollError);
+            break;
+          }
+        }
+
+        return {
+          content: [{
+            type: "text",
+            text: `Bank account closed successfully.\n\n` +
+              `Account details:\n${JSON.stringify(data, null, 2)}`
+          }]
+        };
+      } catch (error) {
+        return errorResponse(error);
+      }
+    }
+  );
+}
+
 export {
   getBankAccount,
   getLegalPerson,
@@ -308,5 +357,6 @@ export {
   listPayments,
   listPayees,
   createAndSubmitPayment,
-  openOperationalAccount
+  openOperationalAccount,
+  closeBankAccount
 }

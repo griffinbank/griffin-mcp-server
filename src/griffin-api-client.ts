@@ -196,6 +196,11 @@ export class GriffinAPIClient {
     return await request<BankAccount>(this.baseUrl, this.apiKey, endpoint, "POST", requestBody);
   }
 
+  async closeAccount(accountUrl: string): Promise<BankAccount> {
+    const endpoint = `${accountUrl}/actions/close`;
+    return request<BankAccount>(this.baseUrl, this.apiKey, endpoint, "POST");
+  }
+
   async getApiKey(apiKeyUrl: string): Promise<GriffinApiKeyResponse> {
     return request<GriffinApiKeyResponse>(this.baseUrl, this.apiKey, apiKeyUrl);
   }

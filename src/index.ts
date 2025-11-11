@@ -12,7 +12,8 @@ import {
   listPayments,
   listPayees,
   createAndSubmitPayment,
-  openOperationalAccount
+  openOperationalAccount,
+  closeBankAccount
 } from "./tools.js";
 import { createPaymentPrompt } from "./prompts.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -40,6 +41,7 @@ function makeServer(client: GriffinAPIClient) {
 
   createAndSubmitPayment(client, server);
   openOperationalAccount(client, server);
+  closeBankAccount(client, server);
 
   return server;
 }
