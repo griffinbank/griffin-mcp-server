@@ -1,29 +1,29 @@
 #!/usr/bin/env node
 
-import { logger } from "./logger.js";
-import {
-  getBankAccount,
-  getLegalPerson,
-  getPayment,
-  getPayee,
-  listTransactions,
-  listBankAccounts,
-  listLegalPersons,
-  listPayments,
-  listPayees,
-  createAndSubmitPayment,
-  openOperationalAccount,
-  closeBankAccount
-} from "./tools.js";
-import { createPaymentPrompt } from "./prompts.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { GriffinAPIClient } from "./griffin-api-client.js";
+import { logger } from "./logger.js";
+import { createPaymentPrompt } from "./prompts.js";
+import {
+  closeBankAccount,
+  createAndSubmitPayment,
+  getBankAccount,
+  getLegalPerson,
+  getPayee,
+  getPayment,
+  listBankAccounts,
+  listLegalPersons,
+  listPayees,
+  listPayments,
+  listTransactions,
+  openOperationalAccount,
+} from "./tools.js";
 
 function makeServer(client: GriffinAPIClient) {
   const server = new McpServer({
     name: "Griffin API",
-    version: "1.0.0"
+    version: "1.0.0",
   });
 
   createPaymentPrompt(server);
@@ -52,14 +52,17 @@ async function ensureSandboxApiKey(client: GriffinAPIClient) {
 
   if (apiKey["api-key-live?"]) {
     logger.warn("⚠️ WARNING: Live API key detected!");
-    logger.warn("This MCP server is only for use against the Griffin Sandbox API.");
+    logger.warn(
+      "This MCP server is only for use against the Griffin Sandbox API.",
+    );
     logger.warn("Exiting...");
     process.exit(1);
   }
 }
 
 async function main() {
-  const griffinApiBaseUrl = process.env.GRIFFIN_API_BASE_URL || "https://api.griffin.com";
+  const griffinApiBaseUrl =
+    process.env.GRIFFIN_API_BASE_URL || "https://api.griffin.com";
   const griffinApiKey = process.env.GRIFFIN_API_KEY;
 
   if (!griffinApiKey) {
@@ -67,8 +70,11 @@ async function main() {
     process.exit(1);
   }
 
-  const client = new GriffinAPIClient(griffinApiBaseUrl, griffinApiKey as string);
-  ensureSandboxApiKey(client);
+  const client = new GriffinAPIClient(
+    griffinApiBaseUrl,
+    griffinApiKey as string,
+  );
+  await ensureSandboxApiKey(client);
 
   logger.info("✅ Sandbox API key verified");
   const server = makeServer(client);
@@ -78,7 +84,7 @@ async function main() {
   logger.info("Griffin API MCP Server running on stdio");
 }
 
-main().catch(error => {
+main().catch((error) => {
   console.error("Fatal error:", error);
   process.exit(1);
 });
