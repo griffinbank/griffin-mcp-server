@@ -68,7 +68,7 @@ async function main() {
   }
 
   const client = new GriffinAPIClient(griffinApiBaseUrl, griffinApiKey as string);
-  ensureSandboxApiKey(client);
+  await ensureSandboxApiKey(client);
 
   logger.info("✅ Sandbox API key verified");
   const server = makeServer(client);
